@@ -1,0 +1,23 @@
+/*
+*= require_directory ./tinymce
+*/
+
+.ace_editor{
+	position:relative !important;
+	width:77.8%;
+	height:400px;
+	display:none;
+}
+<%= Editor.editables.map{|e| "label[for=#{e}_body]"}.join(",") %>{
+	margin-bottom: 400px;
+}
+.switches a{
+	padding:7px 5px;
+	border:1px solid #e4e4e4;
+	text-decoration:none;
+	cursor:pointer;
+	display:inline-block;
+}
+.switches a.active{
+	background:#fff;
+}

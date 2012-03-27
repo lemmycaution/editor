@@ -1,0 +1,7 @@
+=Editor
+
+== Install
+rails g editor:install
+
+== Configuration
+open config/initializers/editor.rb and add model names you want to use editor in active admin
