@@ -81,7 +81,7 @@
 
 .cirkuitSkin table.mceLayout tr.mceLast td {
 	border-bottom: 1px solid #CCC;
-	background: url('img/toolbarbg.png') center repeat-x;
+/*	background: url('img/toolbarbg.png') center repeat-x;*/
 }
 
 .cirkuitSkin table.mceToolbar, .cirkuitSkin tr.mceFirst .mceToolbar tr td, .cirkuitSkin tr.mceLast .mceToolbar tr td {

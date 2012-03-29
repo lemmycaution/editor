@@ -11,7 +11,6 @@ module Editor
     def copy_initializers
       if defined?(ActiveAdmin)
         copy_file "editor.rb", "config/initializers/editor.rb"
-        copy_file "editor_active_admin.rb", "config/initializers/editor_active_admin.rb"      
       end
     end
     
@@ -43,7 +42,7 @@ $(document).ready(function(){
     def precompile_assets_on_production
       if defined?(ActiveAdmin)
         inject_into_file "config/environments/production.rb", :before => "end\n" do
-          "\tconfig.assets.precompile += %w( ace/ace.js ace/mode-html.js ace/theme-tomorrow_night.js )\n"
+          "\tconfig.assets.precompile += %w( tinymce/themes/advanced/skins/cirkuit/ui.css tinymce/themes/advanced/skins/cirkuit/content.css tinymce/themes/advanced/skins/cirkuit/dialog.css )\n"
         end
       end
     end

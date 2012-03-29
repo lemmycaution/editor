@@ -1,7 +1,17 @@
 =Editor
 
 == Install
-rails g editor:install
+add below line into Gemfile
+ gem "editor", :git => "git://github.com/lemmycaution/editor.git"
+then run
+ rails g editor:install
 
 == Configuration
 open config/initializers/editor.rb and add model names you want to use editor in active admin
+
+== Notes
+editor built on active admin, so you have to add active_admin.css and active_admin.js into assets precompile path if you didn't already!
+
+== Update from 0.0.1
+remove editor_active_admin.rb from config/initializers
+remove ace/ace.js ace/mode-html.js ace/theme-tomorrow_night.js from assets precompile path
