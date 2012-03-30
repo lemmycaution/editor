@@ -63,7 +63,6 @@ var editor = window.editor = (function(editor){
 			
 				$textarea.parents('form').submit(function() {
 					var rawVal = current=="code" ? editor.ace.getSession().getValue() : editor.mce.getContent(mce_options);
-					var rawVal = editor.ace.getSession().getValue();
 					editor.mce.remove();
 					$textarea.hide();
 					$textarea.val(rawVal);
