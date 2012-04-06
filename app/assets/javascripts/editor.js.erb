@@ -15,7 +15,8 @@ var editor = window.editor = (function(editor){
 		if (current!=elm) {
 			
 			current = elm;
-			$(".switches a.active").removeClass('active');
+			
+			$(".switches a.active").removeClass('active');			
 			$(".switches a." + elm).addClass('active');
 			
 			if(elm=="visual"){
@@ -76,7 +77,7 @@ var editor = window.editor = (function(editor){
 				'</div>').insertAfter( $("label[for="+_textarea+"]")	);
 
 				$(".switches a").click(function(){
-					switchEditor($(this).attr("class"));
+					switchEditor($(this).prop("class"));
 				});
 			
 				$(textarea+"_input").append($("<div id=\""+_textarea+"_ace\"></div>"));
