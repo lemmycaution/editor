@@ -2,7 +2,7 @@
 
 == Install
 add below line into Gemfile
- gem "editor", :git => "git://github.com/lemmycaution/editor.git"
+ gem "editor", '~> 0.0.5'
 then run
  rails g editor:install
 
