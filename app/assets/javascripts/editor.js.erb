@@ -6,34 +6,55 @@ var editor = window.editor = (function(editor){
 	
 	var inited = editor.inited = false;					
 														
-	var current = editor.current = "visual";
+	var currents = editor.currents = {};
+	var editables = editor.editables = <%= Editor.editables.to_json %>;
+	for( var i in editables){
+		editor.currents[editables[i]] = "visual";
+	}
 
 	var mce_options = editor.mce_options = {cleanup:0, format:'raw'};
 
-	var switchEditor = editor.switchEditor =  function(elm) {
+	var aces = editor.aces = {};
+	var _textareas = editor._textareas = [];	
+	var mces = editor.mces = {};		
 
-		if (current!=elm) {
+	var switchEditor = editor.switchEditor =  function(elm,ref) {
+
+
+		console.log(currents[ref],ref);
+		if (currents[ref]!=elm) {
 			
-			current = elm;
+			currents[ref] = elm;
 			
-			$(".switches a.active").removeClass('active');			
-			$(".switches a." + elm).addClass('active');
+			$(".switches a[ref="+ref+"].active").removeClass('active');			
+			$(".switches a[ref="+ref+"]." + elm).addClass('active');
 			
 			if(elm=="visual"){
-					editor.mce.setContent( 
-						editor.ace.getSession().getValue(), 
+				// for( var i in editor._textareas) {
+
+					// var _textarea = editor._textareas[i];
+
+					editor.mces[ref].setContent( 
+						editor.aces[ref].getSession().getValue(), 
 						mce_options 
 					);
-					$(".mceEditor").show();		
-					$(editor.textarea+"_ace").hide();
+
+				// }
+				$(".mceEditor#"+ref+"_parent").show();		
+				$(".ace_editor#"+ref+"_ace").hide();
 			}else{
-					editor.ace.getSession().setValue( 
-						editor.mce.getContent(
+				// for( var i in editor._textareas) {
+					// var _textarea = editor._textareas[i];
+
+					editor.aces[ref].getSession().setValue( 
+						editor.mces[ref].getContent(
 							mce_options
 						) 
 					);
-					$(".mceEditor").hide();		
-					$(editor.textarea+"_ace").show();
+
+				// }
+				$(".mceEditor#"+ref+"_parent").hide();		
+				$(".ace_editor#"+ref+"_ace").show();
 			}
 			
 		}
@@ -50,39 +71,56 @@ var editor = window.editor = (function(editor){
 			for(var i=0; i < editables.length; i++){
 				if ( $("#"+editables[i]+"_body").length > 0 ){
 					t = editables[i];
-					break;
+					initialize(t);
 				}
 			}
 
-			var textarea = editor.textarea = typeof editor.textarea!=="undefined" ? editor.textarea : '#' + t + '_body';
+		}
+		
+		editor.inited = true;
+	}
+	
+	var initialize = editor.initialize = function(t) {
+		
+			// var textarea = editor.textarea = typeof editor.textarea!=="undefined" ? editor.textarea : '#' + t + '_body';
+			var textarea = "#" + t + "_body";
 
-			var $textarea = editor.$textarea = $(textarea);
+			// var $textarea = editor.$textarea = $(textarea);
+			var $textarea = $(textarea);
+			
+			var container = $textarea.parents("fieldset.inputs");
 		
 			var _textarea = textarea.replace(/#/,"");
+			editor._textareas.push(_textarea);
 		
 			if( $textarea.length > 0 ) {
 			
-				$textarea.parents('form').submit(function() {
-					var rawVal = current=="code" ? editor.ace.getSession().getValue() : editor.mce.getContent(mce_options);
-					editor.mce.remove();
-					$textarea.hide();
-					$textarea.val(rawVal);
-					tinymce = null;
+				$textarea.parents('form').unbind('submit').submit(function() {
+					for( var i in editor._textareas)  { 
+						_textarea = editor._textareas[i];
+						var rawVal = currents[_textarea] == "code" ? editor.aces[_textarea].getSession().getValue() : editor.mces[_textarea].getContent(mce_options);
+						editor.mces[_textarea].remove();
+						$(_textarea).hide();
+						$(_textarea).val(rawVal);
+						tinymce = null;
+					}
 					return true;
 				});
 
 				$('<div class="switches">'+
-				'<a class="visual">visual</a>'+
-				'<a class="code">code</a>'+		
-				'</div>').insertAfter( $("label[for="+_textarea+"]")	);
+				'<a class="visual" ref="'+_textarea+'">visual</a>'+
+				'<a class="code" ref="'+_textarea+'">code</a>'+		
+				'</div>').insertAfter( container.find("label[for="+_textarea+"]")	);
 
-				$(".switches a").click(function(){
-					switchEditor($(this).prop("class"));
+				$(".switches a").unbind('click').click(function(){
+					switchEditor($(this).prop("class").replace("active",""), $(this).attr("ref"));
 				});
 			
 				$(textarea+"_input").append($("<div id=\""+_textarea+"_ace\"></div>"));
 
-				var ace = editor.ace = window.ace.edit(_textarea+"_ace");
+				// var ace = editor.ace = window.ace.edit(_textarea+"_ace");
+				var ace = window.ace.edit(_textarea+"_ace");
+				editor.aces[_textarea] = ace;
 
 				var HtmlMode = require("ace/mode/html").Mode;
 				ace.getSession().setMode(new HtmlMode());
@@ -167,9 +205,15 @@ var editor = window.editor = (function(editor){
 					},
 
 					oninit : function(){ 
-						var mce = editor.mce = $textarea.tinymce();
-						editor.mce.setContent( 
-							editor.ace.getSession().getValue(), 
+						// var mce = editor.mce = $textarea.tinymce();
+						var mce = $textarea.tinymce();
+						editor.mces[_textarea] = mce;
+						// editor.mce.setContent( 
+						// 							editor.ace.getSession().getValue(), 
+						// 							mce_options 
+						// 						);
+						mce.setContent( 
+							editor.aces[_textarea].getSession().getValue(), 
 							mce_options 
 						);
 					}
@@ -177,9 +221,7 @@ var editor = window.editor = (function(editor){
 				});
 
 			}
-		}
 		
-		editor.inited = true;
 	}
 	
 	var reload = editor.reload = function() {
