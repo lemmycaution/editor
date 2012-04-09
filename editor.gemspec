@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Editor::VERSION
   s.authors     = ["Onur Uyar"]
   s.email       = ["fluxproject@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/lemmycaution/editor"
   s.summary     = %q{Editor for Active Admin}
   s.description = %q{wyswyg and code editor for active admin}
 
