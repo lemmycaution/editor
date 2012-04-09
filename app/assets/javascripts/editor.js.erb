@@ -129,7 +129,6 @@ var editor = window.editor = (function(editor){
 				// var ace = editor.ace = window.ace.edit(_textarea+"_ace");
 				var ace = window.ace.edit(_textarea+"_ace");
 				editor.aces[_textarea] = ace;
-				console.log(_textarea)
 
 				var HtmlMode = require("ace/mode/html").Mode;
 				ace.getSession().setMode(new HtmlMode());
