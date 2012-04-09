@@ -20,8 +20,6 @@ var editor = window.editor = (function(editor){
 
 	var switchEditor = editor.switchEditor =  function(elm,ref) {
 
-
-		console.log(currents[ref],ref);
 		if (currents[ref]!=elm) {
 			
 			currents[ref] = elm;
@@ -45,7 +43,6 @@ var editor = window.editor = (function(editor){
 			}else{
 				// for( var i in editor._textareas) {
 					// var _textarea = editor._textareas[i];
-
 					editor.aces[ref].getSession().setValue( 
 						editor.mces[ref].getContent(
 							mce_options
@@ -63,6 +60,17 @@ var editor = window.editor = (function(editor){
 	var init = editor.init = function() {
 
 		if(!editor.inited){
+			
+			$(".translations a").click(function(){
+				var locale = $(this).prop('href').split("#")[1];
+				$("fieldset.translation").hide();
+				$("fieldset.translation#"+locale).show();
+				$(".translations a.active").removeClass('active');
+				$(this).addClass('active');
+				return false;
+			});
+
+			$(".translations a:first").click();
 
 			var editables = <%= Editor.editables.to_json %>
 
@@ -108,12 +116,12 @@ var editor = window.editor = (function(editor){
 				});
 
 				$('<div class="switches">'+
-				'<a class="visual" ref="'+_textarea+'">visual</a>'+
-				'<a class="code" ref="'+_textarea+'">code</a>'+		
+				'<a class="visual" data-ref="'+_textarea+'">visual</a>'+
+				'<a class="code" data-ref="'+_textarea+'">code</a>'+		
 				'</div>').insertAfter( container.find("label[for="+_textarea+"]")	);
 
 				$(".switches a").unbind('click').click(function(){
-					switchEditor($(this).prop("class").replace("active",""), $(this).attr("ref"));
+					switchEditor($(this).prop("class").replace("active",""), $(this).data("ref"));
 				});
 			
 				$(textarea+"_input").append($("<div id=\""+_textarea+"_ace\"></div>"));
@@ -121,6 +129,7 @@ var editor = window.editor = (function(editor){
 				// var ace = editor.ace = window.ace.edit(_textarea+"_ace");
 				var ace = window.ace.edit(_textarea+"_ace");
 				editor.aces[_textarea] = ace;
+				console.log(_textarea)
 
 				var HtmlMode = require("ace/mode/html").Mode;
 				ace.getSession().setMode(new HtmlMode());
