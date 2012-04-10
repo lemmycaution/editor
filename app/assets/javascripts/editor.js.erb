@@ -24,8 +24,8 @@ var editor = window.editor = (function(editor){
 			
 			currents[ref] = elm;
 			
-			$(".switches a[ref="+ref+"].active").removeClass('active');			
-			$(".switches a[ref="+ref+"]." + elm).addClass('active');
+			$(".switches a[data-ref="+ref+"].active").removeClass('active');			
+			$(".switches a[data-ref="+ref+"]." + elm).addClass('active');
 			
 			if(elm=="visual"){
 				// for( var i in editor._textareas) {
@@ -106,11 +106,11 @@ var editor = window.editor = (function(editor){
 				$textarea.parents('form').unbind('submit').submit(function() {
 					for( var i in editor._textareas)  { 
 						_textarea = editor._textareas[i];
-						var rawVal = currents[_textarea] == "code" ? editor.aces[_textarea].getSession().getValue() : editor.mces[_textarea].getContent(mce_options);
+						var rawVal = editor.currents[_textarea] == "code" ? editor.aces[_textarea].getSession().getValue() : editor.mces[_textarea].getContent(mce_options);
 						editor.mces[_textarea].remove();
-						$(_textarea).hide();
-						$(_textarea).val(rawVal);
-						tinymce = null;
+						editor.mces[_textarea] = null;
+						$("#"+_textarea).hide();
+						$("#"+_textarea).val(rawVal);
 					}
 					return true;
 				});
