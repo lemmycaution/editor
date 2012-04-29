@@ -5,7 +5,7 @@
 	display:none;
 }
 
-<%= Editor.editables.map{ |e| "label[for=#{e}_body]" }.join(", ") %>{
+<%= Editor.editables.map{ |e| Editor.use_suffix ? "label[for=#{e}_body]" : "label[for=#{e}]" }.join(", ") %>{
 	margin-bottom: 400px;
 }
 
