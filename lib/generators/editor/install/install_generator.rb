@@ -1,3 +1,5 @@
+# TODO: make asset path prefix configurable and merge master branch
+
 module Editor
   class InstallGenerator < Rails::Generators::Base
     source_root File.expand_path('../templates', __FILE__)
@@ -25,7 +27,7 @@ $(document).ready(function(){
 
 });        
         CONTENT
-        inject_into_file "app/assets/javascripts/active_admin.js", :after => "//= require active_admin/base\n" do
+        inject_into_file "app/assets/javascripts/admin/active_admin.js", :after => "//= require active_admin/base\n" do
           content
         end
       end
@@ -33,7 +35,7 @@ $(document).ready(function(){
     
     def add_styles_into_active_admin
       if defined?(ActiveAdmin)
-        inject_into_file "app/assets/stylesheets/active_admin.css.scss", :after => "@import \"active_admin/base\";\n" do
+        inject_into_file "app/assets/stylesheets/admin/active_admin.css.scss", :after => "@import \"active_admin/base\";\n" do
           '@import "editor";'
         end
       end
