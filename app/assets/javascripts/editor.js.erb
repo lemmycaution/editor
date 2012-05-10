@@ -159,7 +159,7 @@ var editor = window.editor = (function(editor){
 
 				var plugins = "spellchecker,safari,pagebreak,style,layer,save,advlink,advlist,iespell,inlinepopups,insertdatetime,contextmenu,directionality,noneditable,nonbreaking,xhtmlxtras,template";
 				
-				if ( $("#content_template_path").length > 0 && $("#content_template_path").val().match(/layouts/).length > 0 ){
+				if ( $("#content_template_path").length > 0 && $("#content_template_path").val().match(/layouts/)!==null ){
 					plugins += ",fullpage";
 				}
 				
