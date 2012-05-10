@@ -19,6 +19,8 @@ var editor = window.editor = (function(editor){
 	var _textareas = editor._textareas = [];	
 	var mces = editor.mces = {};		
 
+	var hasVisualEditor = true;
+
 	var switchEditor = editor.switchEditor =  function(elm,ref) {
 
 		if (currents[ref]!=elm) {
@@ -44,11 +46,13 @@ var editor = window.editor = (function(editor){
 			}else{
 				// for( var i in editor._textareas) {
 					// var _textarea = editor._textareas[i];
-					editor.aces[ref].getSession().setValue( 
-						editor.mces[ref].getContent(
-							mce_options
-						) 
-					);
+					if (hasVisualEditor) {
+						editor.aces[ref].getSession().setValue( 
+							editor.mces[ref].getContent(
+								mce_options
+							) 
+						);
+					}
 
 				// }
 				$(".mceEditor#"+ref+"_parent").hide();		
@@ -102,6 +106,8 @@ var editor = window.editor = (function(editor){
 			var _textarea = textarea.replace(/#/,"");
 			editor._textareas.push(_textarea);
 		
+			hasVisualEditor = $textarea.attr('id') != "content_asset_body";
+		
 			if( $textarea.length > 0 ) {
 			
 				$textarea.parents('form').unbind('submit').submit(function() {
@@ -131,8 +137,13 @@ var editor = window.editor = (function(editor){
 				var ace = window.ace.edit(_textarea+"_ace");
 				editor.aces[_textarea] = ace;
 
-				var HtmlMode = require("ace/mode/html").Mode;
-				ace.getSession().setMode(new HtmlMode());
+				var mode = "html";
+				if (!hasVisualEditor){
+				mode = $("#content_asset_content_type").val().split("/")[1];
+				}
+
+				var SyntaxMode = require("ace/mode/"+mode).Mode;
+				ace.getSession().setMode(new SyntaxMode());
 
 				ace.setTheme("ace/theme/tomorrow_night");
 
@@ -144,11 +155,19 @@ var editor = window.editor = (function(editor){
 
 				ace.renderer.setHScrollBarAlwaysVisible(false);
 
+				if (hasVisualEditor) {
+
+				var plugins = "spellchecker,safari,pagebreak,style,layer,save,advlink,advlist,iespell,inlinepopups,insertdatetime,contextmenu,directionality,noneditable,nonbreaking,xhtmlxtras,template";
+				
+				if ( $("#content_template_path").length > 0 && $("#content_template_path").val().match(/layouts/).length > 0 ){
+					plugins += ",fullpage";
+				}
+				
 				$textarea.tinymce({
 					theme: 'advanced',
 					skin:"cirkuit",
 
-					plugins : "fullpage,spellchecker,safari,pagebreak,style,layer,save,advlink,advlist,iespell,inlinepopups,insertdatetime,contextmenu,directionality,noneditable,nonbreaking,xhtmlxtras,template", 
+					plugins : plugins, 
 					// Theme options 
 					theme_advanced_buttons1 : "formatselect,fontsizeselect,forecolor,|,bold,italic,strikethrough,|,bullist,numlist,|,justifyleft,justifycenter,justifyright,|,link,unlink,|,image,fullpage", 
 					theme_advanced_buttons2 : "", 
@@ -229,6 +248,11 @@ var editor = window.editor = (function(editor){
 							
 				});
 
+				}else{
+					$("#"+_textarea).hide();
+					$(".switches a.code").click();
+					$(".switches").remove();
+				}
 			}
 		
 	}
