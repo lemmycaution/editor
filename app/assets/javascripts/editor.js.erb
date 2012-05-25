@@ -1,6 +1,4 @@
-//= require ./ace/ace-uncompressed
-//= require ./ace/mode-html
-//= require ./ace/theme-tomorrow_night
+//= require_directory ./ace
 //= require tinymce-jquery
 var editor = window.editor = (function(editor){
 	
@@ -139,11 +137,11 @@ var editor = window.editor = (function(editor){
 
 				var mode = "html";
 				if (!hasVisualEditor){
-				mode = $("#content_asset_content_type").val().split("/")[1];
+					var modes = $("#content_asset_content_type").val().split("/")[1];
 				}
 
-				var SyntaxMode = require("ace/mode/"+mode).Mode;
-				ace.getSession().setMode(new SyntaxMode());
+				// var SyntaxMode = require("ace/mode/"+mode).Mode;
+				ace.getSession().setMode("ace/mode/"+mode);
 
 				ace.setTheme("ace/theme/tomorrow_night");
 
