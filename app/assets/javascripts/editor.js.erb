@@ -120,10 +120,12 @@ var editor = window.editor = (function(editor){
 					return true;
 				});
 
+				if ( container.find(".switches").length == 0 ){
 				$('<div class="switches">'+
 				'<a class="visual" data-ref="'+_textarea+'">visual</a>'+
 				'<a class="code" data-ref="'+_textarea+'">code</a>'+		
 				'</div>').insertAfter( container.find("label[for="+_textarea+"]")	);
+				}
 
 				$(".switches a").unbind('click').click(function(){
 					switchEditor($(this).prop("class").replace("active",""), $(this).data("ref"));
