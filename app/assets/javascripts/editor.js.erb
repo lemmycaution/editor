@@ -3,7 +3,7 @@
 var editor = window.editor = (function(editor){
 	
 	var inited = editor.inited = false;					
-														
+									
 	var currents = editor.currents = {};
 	var editables = editor.editables = <%= Editor.editables.to_json %>;
 	var use_suffix = editor.use_suffix = <%= Editor.use_suffix ? "true" : "false" %>;
@@ -92,7 +92,7 @@ var editor = window.editor = (function(editor){
 	}
 	
 	var initialize = editor.initialize = function(t) {
-		
+
 			// var textarea = editor.textarea = typeof editor.textarea!=="undefined" ? editor.textarea : '#' + t + '_body';
 			var textarea = use_suffix ? "#" + t + "_body" : "#" + t ;
 
@@ -102,7 +102,12 @@ var editor = window.editor = (function(editor){
 			var container = $textarea.parents("fieldset.inputs");
 		
 			var _textarea = textarea.replace(/#/,"");
-			editor._textareas.push(_textarea);
+			
+
+			
+			if (editor._textareas.indexOf(_textarea) == -1){
+				editor._textareas.push(_textarea);
+			}
 		
 			hasVisualEditor = $textarea.attr('id') != "content_asset_body";
 		
@@ -121,10 +126,10 @@ var editor = window.editor = (function(editor){
 				});
 
 				if ( container.find(".switches").length == 0 ){
-				$('<div class="switches">'+
-				'<a class="visual" data-ref="'+_textarea+'">visual</a>'+
-				'<a class="code" data-ref="'+_textarea+'">code</a>'+		
-				'</div>').insertAfter( container.find("label[for="+_textarea+"]")	);
+					$('<div class="switches">'+
+					'<a class="visual active" data-ref="'+_textarea+'">visual</a>'+
+					'<a class="code" data-ref="'+_textarea+'">code</a>'+		
+					'</div>').insertAfter( container.find("label[for="+_textarea+"]")	);
 				}
 
 				$(".switches a").unbind('click').click(function(){
@@ -254,7 +259,8 @@ var editor = window.editor = (function(editor){
 					$(".switches").remove();
 				}
 			}
-		
+			
+
 	}
 	
 	var reload = editor.reload = function() {
