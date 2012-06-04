@@ -109,7 +109,7 @@ var editor = window.editor = (function(editor){
 				editor._textareas.push(_textarea);
 			}
 		
-			hasVisualEditor = $textarea.attr('id') != "content_asset_body";
+			hasVisualEditor = <%== Editor.has_visual_editor.to_json %>.indexOf( $textarea.attr('id') ) > -1 ? true : false ;
 		
 			if( $textarea.length > 0 ) {
 			
@@ -187,7 +187,7 @@ var editor = window.editor = (function(editor){
 					convert_newlines_to_brs: 0,
 					// custom_elements:
 					doctype: "<!DOCTYPE html>",
-					content_css: "/admin/application.css",
+					content_css: "/application.css",
 					element_format: 'raw',
 					encoding: '',
 					// entities: ,

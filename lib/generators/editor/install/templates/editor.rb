@@ -6,5 +6,8 @@ Editor.setup do |config|
   
   # adds _body suffix to selectors
   config.use_suffix = true
+
+  # adds tinymce visual editor
+  config.has_visual_editor = ["page"]
   
 end

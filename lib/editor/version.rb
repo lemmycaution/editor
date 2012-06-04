@@ -1,3 +1,3 @@
 module Editor
-  VERSION = "0.0.9.patch.4"
+  VERSION = "0.0.9.patch.5"
 end
