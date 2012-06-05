@@ -68,7 +68,7 @@ var editor = window.editor = (function(editor){
 
 			if(!editor.inited){
 
-				$("body").append($('<div class="editor_loader">loading...</div>'))						
+				// $("body").append($('<div class="editor_loader">loading...</div>'))						
 
 				$(".translations a").click(function(){
 					var locale = $(this).prop('href').split("#")[1];
@@ -259,11 +259,11 @@ var editor = window.editor = (function(editor){
 							mce_options 
 						);
 						
-						editor.li += 1;
-
-						if( editor.li == locales_count ){
-							$(".editor_loader").remove();
-						};
+						// editor.li += 1;
+						// 
+						// if( editor.li == locales_count ){
+						// 	$(".editor_loader").remove();
+						// };
 
 					}
 							
@@ -273,7 +273,7 @@ var editor = window.editor = (function(editor){
 					$("#"+_textarea).hide();
 					$(".switches a.code").click();
 					$(".switches").remove();
-					$(".editor_loader").remove();
+					// $(".editor_loader").remove();
 				}
 			}
 			
