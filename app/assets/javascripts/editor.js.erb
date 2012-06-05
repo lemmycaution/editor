@@ -3,9 +3,11 @@
 var editor = window.editor = (function(editor){
 	
 	var inited = editor.inited = false;					
-									
+	var li = editor.li = 0;				
 	var currents = editor.currents = {};
+	var locales_count = editor.locales_count = <%= Editor.locales_count %>;	
 	var editables = editor.editables = <%= Editor.editables.to_json %>;
+	var visuals = editor.visuals = <%= Editor.has_visual_editor.to_json %>;
 	var use_suffix = editor.use_suffix = <%= Editor.use_suffix ? "true" : "false" %>;
 	for( var i in editables){
 		editor.currents[editables[i]] = "visual";
@@ -61,31 +63,35 @@ var editor = window.editor = (function(editor){
 	}
 	
 	var init = editor.init = function() {
+	
+		if ( $(editor.editables.map(function(e){return "#"+e}).join(", ")).length > 0 ){
 
-		if(!editor.inited){
-			
-			$(".translations a").click(function(){
-				var locale = $(this).prop('href').split("#")[1];
-				$("fieldset.translation").hide();
-				$("fieldset.translation#"+locale).show();
-				$(".translations a.active").removeClass('active');
-				$(this).addClass('active');
-				return false;
-			});
+			if(!editor.inited){
 
-			$(".translations a:first").click();
+				$("body").append($('<div class="editor_loader">loading...</div>'))						
 
-			var t = editor.t = false;
-		
-			for(var i=0; i < editables.length; i++){
-				var eid = use_suffix ? "#"+editables[i]+"_body" : "#"+editables[i];
+				$(".translations a").click(function(){
+					var locale = $(this).prop('href').split("#")[1];
+					$("fieldset.translation").hide();
+					$("fieldset.translation#"+locale).show();
+					$(".translations a.active").removeClass('active');
+					$(this).addClass('active');
+					return false;
+				});
 
-				if ( $( eid ).length > 0 ){
-					t = editables[i];
-					initialize(t);
+				$(".translations a:first").click();
+
+				var t = editor.t = false;
+
+				for(var i=0; i < editables.length; i++){
+					var eid = use_suffix ? "#"+editables[i]+"_body" : "#"+editables[i];
+
+					if ( $( eid ).length > 0 ){
+						t = editables[i];
+						initialize(t);
+					}
 				}
 			}
-
 		}
 		
 		editor.inited = true;
@@ -109,7 +115,7 @@ var editor = window.editor = (function(editor){
 				editor._textareas.push(_textarea);
 			}
 		
-			hasVisualEditor = <%== Editor.has_visual_editor.to_json %>.indexOf( $textarea.attr('id') ) > -1 ? true : false ;
+			hasVisualEditor = visuals.indexOf( $textarea.attr('id') ) > -1 ? true : false ;
 		
 			if( $textarea.length > 0 ) {
 			
@@ -125,16 +131,19 @@ var editor = window.editor = (function(editor){
 					return true;
 				});
 
+
 				if ( container.find(".switches").length == 0 ){
 					$('<div class="switches">'+
 					'<a class="visual active" data-ref="'+_textarea+'">visual</a>'+
 					'<a class="code" data-ref="'+_textarea+'">code</a>'+		
 					'</div>').insertAfter( container.find("label[for="+_textarea+"]")	);
 				}
+				
 
 				$(".switches a").unbind('click').click(function(){
 					switchEditor($(this).prop("class").replace("active",""), $(this).data("ref"));
 				});
+
 			
 				$(textarea+"_input").append($("<div id=\""+_textarea+"_ace\"></div>"));
 
@@ -143,7 +152,7 @@ var editor = window.editor = (function(editor){
 				editor.aces[_textarea] = ace;
 
 				var mode = "html";
-				if (!hasVisualEditor){
+				if (!hasVisualEditor && $textarea.attr('id') == "content_asset_body" ){
 					var modes = $("#content_asset_content_type").val().split("/")[1];
 				}
 
@@ -187,7 +196,7 @@ var editor = window.editor = (function(editor){
 					convert_newlines_to_brs: 0,
 					// custom_elements:
 					doctype: "<!DOCTYPE html>",
-					content_css: "/application.css",
+					// content_css: "/application.css",
 					element_format: 'raw',
 					encoding: '',
 					// entities: ,
@@ -249,6 +258,13 @@ var editor = window.editor = (function(editor){
 							editor.aces[_textarea].getSession().getValue(), 
 							mce_options 
 						);
+						
+						editor.li += 1;
+
+						if( editor.li == locales_count ){
+							$(".editor_loader").remove();
+						};
+
 					}
 							
 				});
@@ -257,6 +273,7 @@ var editor = window.editor = (function(editor){
 					$("#"+_textarea).hide();
 					$(".switches a.code").click();
 					$(".switches").remove();
+					$(".editor_loader").remove();
 				}
 			}
 			
